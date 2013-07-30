@@ -273,6 +273,7 @@ amqp_rpc_reply_t amqp_simple_rpc(amqp_connection_state_t state,
   if (status < 0) {
     result.reply_type = AMQP_RESPONSE_LIBRARY_EXCEPTION;
     result.library_errno = -status;
+    result.detail = AMQP_REPLY_SEND_ERROR;
     return result;
   }
 
@@ -284,6 +285,7 @@ amqp_rpc_reply_t amqp_simple_rpc(amqp_connection_state_t state,
     if (status <= 0) {
       result.reply_type = AMQP_RESPONSE_LIBRARY_EXCEPTION;
       result.library_errno = -status;
+      result.detail = AMQP_REPLY_RECV_ERROR;
       return result;
     }
 
@@ -460,5 +462,6 @@ amqp_rpc_reply_t amqp_login(amqp_connection_state_t state,
   result.reply.id = 0;
   result.reply.decoded = NULL;
   result.library_errno = 0;
+  result.detail = AMQP_REPLY_NO_DETAIL;
   return result;
 }

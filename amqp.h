@@ -101,10 +101,17 @@ typedef enum amqp_response_type_enum_ {
   AMQP_RESPONSE_SERVER_EXCEPTION
 } amqp_response_type_enum;
 
+typedef enum {
+  AMQP_REPLY_NO_DETAIL = 0,
+  AMQP_REPLY_SEND_ERROR,
+  AMQP_REPLY_RECV_ERROR
+} amqp_reply_detail_t;
+
 typedef struct amqp_rpc_reply_t_ {
   amqp_response_type_enum reply_type;
   amqp_method_t reply;
   int library_errno; /* if AMQP_RESPONSE_LIBRARY_EXCEPTION, then 0 here means socket EOF */
+  amqp_reply_detail_t detail;
 } amqp_rpc_reply_t;
 
 typedef enum amqp_sasl_method_enum_ {

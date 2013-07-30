@@ -30,8 +30,20 @@ void die_on_amqp_error(pTHX_ amqp_rpc_reply_t x, char const *context) {
       break;
 
     case AMQP_RESPONSE_LIBRARY_EXCEPTION:
-      Perl_croak(aTHX_ "%s: %s\n", context,
+      switch (x.detail) {
+        case AMQP_REPLY_NO_DETAIL:
+          Perl_croak(aTHX_ "%s: %s\n", context,
               x.library_errno ? strerror(x.library_errno) : "(end-of-stream)");
+          break;
+        case AMQP_REPLY_SEND_ERROR:
+          Perl_croak(aTHX_ "%s: %s (send error)\n", context,
+              x.library_errno ? strerror(x.library_errno) : "(end-of-stream)");
+          break;
+        case AMQP_REPLY_RECV_ERROR:
+          Perl_croak(aTHX_ "%s: %s (recv error)\n", context,
+              x.library_errno ? strerror(x.library_errno) : "(end-of-stream)");
+          break;
+      }
       break;
 
     case AMQP_RESPONSE_SERVER_EXCEPTION:
